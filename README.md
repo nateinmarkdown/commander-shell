@@ -16,7 +16,10 @@ Commander Shell is a command line interface that allows users to perform various
 
 To start the application, run the following command:
 
-'python commander_shell.py'
+
+```phyton
+  phyton app.py
+```
 
 This will start the Commander Shell with a small prompt. You can then enter any of the commands listed in the `help` menu to perform the corresponding action.
 
