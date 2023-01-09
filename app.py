@@ -32,7 +32,7 @@ import os
 @click.argument('directory')
 def touch(directory):
     try:
-        with open(file_directory, 'w') as f:
+        with open(directory, 'w') as f:
             f.write('')
         print("Successfully created file in directory:", directory)
     except Exception as e:
