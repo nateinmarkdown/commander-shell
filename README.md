@@ -4,15 +4,15 @@ Commander Shell is a command line interface that allows users to perform various
 
 ## Commands
 
-- 'help': -- Shows this menu,
-- 'message': -- Prints a messsage to console,
-- 'touch': Creates a file in a specific directory
-- 'rm': Deletes a file in a specific directory
-- 'mkdir': Creates a new directory
-- 'rmdir>': Deletes a directory
-- 'mv': Renames or moves a file or directory
-- 'play': Play a fun game in the terminal
-- 'exit': -- Exits the application
+- `help`: -- Shows this menu,
+- `message`: -- Prints a messsage to console,
+- `touch`: Creates a file in a specific directory
+- `rm`: Deletes a file in a specific directory
+- `mkdir`: Creates a new directory
+- `rmdir>`: Deletes a directory
+- `mv`: Renames or moves a file or directory
+- `play`: Play a fun game in the terminal
+- `exit`: -- Exits the application
 
 ## Usage
 
