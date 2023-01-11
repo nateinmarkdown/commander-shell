@@ -20,8 +20,7 @@ def help():
 'rmdir <dir>' Deletes a directory
 'mv <original> <new>' Renames or moves a file or directory
 'play <game>' Play a fun game in the terminal
-'exit' -- Exits the application
-""")
+'exit' -- Exits the application""")
 
 @commanderShell.command()
 @click.argument('message', default='No message provided')
