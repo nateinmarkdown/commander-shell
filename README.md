@@ -4,18 +4,19 @@ Commander Shell is a command line interface that allows users to perform various
 
 ## Commands
 
-- `help`: Shows a list of all available commands
-- `message`: Prints a message to the console
-- `exit`: Exits the application
-- `touch`: Creates a file in a specific directory
-- `rm`: Deletes a file in a specific directory
-- `mkdir`: Creates a new directory
-- `rmdir`: Deletes a directory
+- 'help': -- Shows this menu,
+- 'message': -- Prints a messsage to console,
+- 'touch': Creates a file in a specific directory
+- 'rm': Deletes a file in a specific directory
+- 'mkdir': Creates a new directory
+- 'rmdir>': Deletes a directory
+- 'mv': Renames or moves a file or directory
+- 'play': Play a fun game in the terminal
+- 'exit': -- Exits the application
 
 ## Usage
 
 To start the application, run the following command:
-
 
 ```phyton
   phyton app.py
