@@ -2,24 +2,31 @@ from click_shell import shell
 import click
 import sys
 import os
+from termcolor import colored
 
-@shell(prompt='>>> ', intro="""Commander Shell version 1.0.0
-Type 'help' for help.""")
+def get_prompt():
+    cwd = os.getcwd()
+    return colored(cwd + ' >>> ', 'green')
 
+@shell(prompt=get_prompt, intro="Commander Shell version 1.0.0\nType 'help' for help.")
 def commanderShell():
     pass
 
 @commanderShell.command()
 def help():
-    print("""Here is a list of all availible commands:
+    print("""Here is a list of all available commands:
 'help' -- Shows this menu,
-'message' -- Prints a messsage to console,
-'touch <dir>' Creates a file in a specific directory
-'rm <dir>' Deletes a file in a specific directory
+'message' -- Prints a message to console,
+'touch <dir> <name>' Creates a file with a specific name in a directory
+'rm <file>' Deletes a file in the current directory
 'mkdir <dir>' Creates a new directory
 'rmdir <dir>' Deletes a directory
 'mv <original> <new>' Renames or moves a file or directory
-'play <game>' Play a fun game in the terminal
+'ls [dir]' Lists the files in the current directory or a specific directory
+'cd <dir>' Change the current working directory
+'cat <file>' Prints the contents of a file
+'grep <string> <file>' Search for a string in a file
+'find <name> [dir]' Search for a file by name in the current directory or a specific directory
 'exit' -- Exits the application""")
 
 @commanderShell.command()
@@ -27,28 +34,25 @@ def help():
 def message(message):
     print(message)
 
-import sys
-import os
-
 @commanderShell.command()
-@click.argument('directory')
-def touch(directory):
+@click.argument('name')
+def touch(name):
     try:
-        with open(directory, 'w') as f:
+        with open(name, 'w') as f:
             f.write('')
-        print("Successfully created file in directory:", directory)
+        print("Successfully created file:", name)
     except Exception as e:
-        print("Error creating file in directory:", directory)
+        print("Error creating file:", name)
         print(e)
 
 @commanderShell.command()
-@click.argument('directory')
-def rm(directory):
+@click.argument('file')
+def rm(file):
     try:
-        os.remove(directory)
-        print("Successfully deleted file:", directory)
+        os.remove(file)
+        print("Successfully deleted file:", file)
     except Exception as e:
-        print("Error deleting file:", directory)
+        print("Error deleting file:", file)
         print(e)
 
 @commanderShell.command()
@@ -77,38 +81,73 @@ def rmdir(directory):
 def mv(original, new):
     try:
         os.rename(original, new)
+        print(f"Successfully moved/renamed {original} to {new}")
     except Exception as e:
         print('Unable to rename or move file/directory')
         print(e)
 
 @commanderShell.command()
-@click.argument('game')
-def play(game):
-    if game == 'dice':
-        import random
-        dice = str(random.randint(1,6))
-        print('You rolled a '+ dice)
-    elif game == 'quiz':
-        points = 0
-        question = input('What does RAM stand for? ').lower
-        if question == 'random-access memory' or 'random access memory':
-            points += 1
-            print('Correct!')
-        else:
-            print('Incorrect!')  
-        question = input('What is the command to remove files in linux? ')  
-        if question == 'rm':
-            points += 1
-            print('Correct!')
-        if points <1:
-            points = 0
-        points = str(points)
+@click.argument('directory', default=os.getcwd())
+def ls(directory):
+    try:
+        os.chdir(directory)
+        files = os.listdir()
+        for file in files:
+            print(file)
+    except Exception as e:
+        print("Error listing files in directory:", directory)
+        print(e)
+    os.chdir('..')
 
-        print('You scored ' + points + 'points!')            
-    else:
-        print("""Unknown game, list of availible games:
-'play dice' Rolls a random number between 1 and 6
-'play quiz' Play a fun computer quiz""")           
+@commanderShell.command()
+@click.argument('directory')
+def cd(directory):
+    try:
+        os.chdir(directory)
+        print("Successfully changed working directory to:", directory)
+    except Exception as e:
+        print("Error changing working directory to:", directory)
+        print(e)
+
+@commanderShell.command()
+@click.argument('file')
+def cat(file):
+    try:
+        with open(file, 'r') as f:
+            contents = f.read()
+            print(contents)
+    except Exception as e:
+        print("Error reading file:", file)
+        print(e)
+
+@commanderShell.command()
+@click.argument('string')
+@click.argument('file')
+def grep(string, file):
+    try:
+        with open(file, 'r') as f:
+            contents = f.read()
+            if string in contents:
+                print("String '" + string + "' found in file:", file)
+            else:
+                print("String '" + string + "' not found in file:", file)
+    except Exception as e:
+        print("Error searching file:", file)
+        print(e)
+
+@commanderShell.command()
+@click.argument('name')
+@click.argument('directory', default=os.getcwd())
+def find(name, directory):
+    try:
+        for root, dirs, files in os.walk(directory):
+            if name in files:
+                print("File '" + name + "' found in directory:", root)
+                return
+        print("File '" + name + "' not found in directory:", directory)
+    except Exception as e:
+        print("Error searching for file:", name)
+        print(e)
 
 if __name__ == '__main__':
     commanderShell()
