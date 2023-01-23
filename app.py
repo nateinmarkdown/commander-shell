@@ -1,14 +1,12 @@
 from click_shell import shell
+from termcolor import colored
 import click
 import sys
 import os
-from termcolor import colored
 
-def get_prompt():
-    cwd = os.getcwd()
-    return colored(cwd + ' >>> ', 'green')
+@shell(prompt=colored('{} >>> '.format(os.getcwd()), 'green'), intro="""Commander Shell version 1.0.0
+Type 'help' for help.""")
 
-@shell(prompt=get_prompt, intro="Commander Shell version 1.0.0\nType 'help' for help.")
 def commanderShell():
     pass
 
@@ -17,7 +15,7 @@ def help():
     print("""Here is a list of all available commands:
 'help' -- Shows this menu,
 'message' -- Prints a message to console,
-'touch <dir> <name>' Creates a file with a specific name in a directory
+'touch <name> [directory]' Creates a file with a specific name in the current directory or a specific directory
 'rm <file>' Deletes a file in the current directory
 'mkdir <dir>' Creates a new directory
 'rmdir <dir>' Deletes a directory
@@ -36,14 +34,19 @@ def message(message):
 
 @commanderShell.command()
 @click.argument('name')
-def touch(name):
+@click.argument('directory', default=os.getcwd(), required=False)
+def touch(name, directory=None):
+    if directory is None:
+        directory = os.getcwd()
     try:
+        os.chdir(directory)
         with open(name, 'w') as f:
             f.write('')
-        print("Successfully created file:", name)
+        print(f"Successfully created file {name} in directory {directory}")
     except Exception as e:
         print("Error creating file:", name)
         print(e)
+    os.chdir('..')
 
 @commanderShell.command()
 @click.argument('file')
@@ -56,8 +59,10 @@ def rm(file):
         print(e)
 
 @commanderShell.command()
-@click.argument('directory')
-def mkdir(directory):
+@click.argument('directory', default=os.getcwd(), required=False)
+def mkdir(directory=None):
+    if directory is None:
+        directory = os.getcwd()
     try:
         os.mkdir(directory)
         print("Successfully created directory:", directory)
@@ -66,8 +71,10 @@ def mkdir(directory):
         print(e)
 
 @commanderShell.command()
-@click.argument('directory')
-def rmdir(directory):
+@click.argument('directory', default=os.getcwd(), required=False)
+def rmdir(directory=None):
+    if directory is None:
+        directory = os.getcwd()
     try:
         os.rmdir(directory)
         print("Successfully deleted directory:", directory)
@@ -81,41 +88,42 @@ def rmdir(directory):
 def mv(original, new):
     try:
         os.rename(original, new)
-        print(f"Successfully moved/renamed {original} to {new}")
     except Exception as e:
         print('Unable to rename or move file/directory')
         print(e)
 
 @commanderShell.command()
-@click.argument('directory', default=os.getcwd())
-def ls(directory):
+@click.argument('directory', default=os.getcwd(), required=False)
+def ls(directory=None):
+    if directory is None:
+        directory = os.getcwd()
     try:
         os.chdir(directory)
-        files = os.listdir()
-        for file in files:
-            print(file)
+        print("Files in directory:", directory)
+        print(os.listdir())
     except Exception as e:
         print("Error listing files in directory:", directory)
         print(e)
     os.chdir('..')
 
 @commanderShell.command()
-@click.argument('directory')
-def cd(directory):
+@click.argument('directory', default=os.getcwd(), required=False)
+def cd(directory=None):
+    if directory is None:
+        directory = os.getcwd()
     try:
         os.chdir(directory)
         print("Successfully changed working directory to:", directory)
     except Exception as e:
-        print("Error changing working directory to:", directory)
+        print("Error changing working directory to:",directory)
         print(e)
-
+        
 @commanderShell.command()
 @click.argument('file')
 def cat(file):
     try:
         with open(file, 'r') as f:
-            contents = f.read()
-            print(contents)
+            print(f.read())
     except Exception as e:
         print("Error reading file:", file)
         print(e)
@@ -126,28 +134,29 @@ def cat(file):
 def grep(string, file):
     try:
         with open(file, 'r') as f:
-            contents = f.read()
-            if string in contents:
-                print("String '" + string + "' found in file:", file)
-            else:
-                print("String '" + string + "' not found in file:", file)
+            lines = f.readlines()
+            for line in lines:
+                if string in line:
+                    print(line)
     except Exception as e:
         print("Error searching file:", file)
         print(e)
 
 @commanderShell.command()
 @click.argument('name')
-@click.argument('directory', default=os.getcwd())
-def find(name, directory):
+@click.argument('directory', default=os.getcwd(), required=False)
+def find(name, directory=None):
+    if directory is None:
+        directory = os.getcwd()
     try:
-        for root, dirs, files in os.walk(directory):
+        os.chdir(directory)
+        for root, dirs, files in os.walk("."):
             if name in files:
-                print("File '" + name + "' found in directory:", root)
-                return
-        print("File '" + name + "' not found in directory:", directory)
+                print(os.path.join(root, name))
     except Exception as e:
-        print("Error searching for file:", name)
+        print("Error finding file:", name)
         print(e)
+    os.chdir('..')
 
 if __name__ == '__main__':
     commanderShell()
