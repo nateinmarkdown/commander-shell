@@ -12,20 +12,21 @@ def commanderShell():
 
 @commanderShell.command()
 def help():
-    print("""Here is a list of all available commands:
-'help' -- Shows this menu,
-'message' -- Prints a message to console,
-'touch <name> [directory]' Creates a file with a specific name in the current directory or a specific directory
-'rm <file>' Deletes a file in the current directory
-'mkdir <dir>' Creates a new directory
-'rmdir <dir>' Deletes a directory
-'mv <original> <new>' Renames or moves a file or directory
-'ls [dir]' Lists the files in the current directory or a specific directory
-'cd <dir>' Change the current working directory
-'cat <file>' Prints the contents of a file
-'grep <string> <file>' Search for a string in a file
-'find <name> [dir]' Search for a file by name in the current directory or a specific directory
-'exit' -- Exits the application""")
+    print("""Commands:
+'help' -- Show this menu
+'message' -- Print a message
+'touch' -- Create a file
+'rm' -- Delete a file
+'mkdir' -- Create a directory
+'rmdir' -- Delete a directory
+'mv' -- Rename or move a file or directory
+'ls' -- List files in a directory
+'cd' -- Change working directory
+'cat' -- Print contents of a file
+'grep' -- Search for string in a file
+'find' -- Search for a file by name
+'exit' -- Exit the application
+For more info on each command, type '<command> --help'""")
 
 @commanderShell.command()
 @click.argument('message', default='No message provided')
