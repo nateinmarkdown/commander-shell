@@ -1,4 +1,11 @@
 
+## Notice
+There's not really a point of updating this repository
+with more commands and features as there are
+better and more advanced ways to get a Linux-like experience on
+Windows or even Mac such as WSL (Windows Subsystem For Linux) or
+a virtual machine.
+
 # Commander Shell
 
 Commander Shell is a command line interface 
